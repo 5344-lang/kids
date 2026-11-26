@@ -6,7 +6,7 @@ const S = 'https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_be6ec959-1c37-4a8c-948a-e
 
 const KIDS_CONFIG = {
   contactUrl: 'https://kmong.com/gig/766983',   // 크몽 상품 링크 (키즈 전용 상품이 생기면 바꿔 주세요)
-  surveyUrl:  'https://docs.google.com/forms/d/19chvS_Ix8FaT8PYJkzyOuTzOBFdHQD4ON0AMZ7JBqag/viewform',
+  surveyUrl:  'https://forms.gle/eHh23PuRUgN7V9HT7',
   mainSite:   'https://5344-lang.github.io/page/',
 
   // 학년 구분
