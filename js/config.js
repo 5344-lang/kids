@@ -4,7 +4,7 @@
    ============================================================ */
 const KIDS_CONFIG = {
   contactUrl: 'https://kmong.com/gig/766983',   // 상담 신청 링크 (키즈 전용 크몽 상품이 생기면 바꿔 주세요)
-  surveyUrl:  '',                                // 구글 설문지 링크 (비워 두면 상담 신청 링크로 연결)
+  surveyUrl:  'https://docs.google.com/forms/d/19chvS_Ix8FaT8PYJkzyOuTzOBFdHQD4ON0AMZ7JBqag/viewform',                                // 구글 설문지 링크 (비워 두면 상담 신청 링크로 연결)
   mainSite:   'https://5344-lang.github.io/page/',
   area:       '대구',                            // 방문 가능 지역
 
