@@ -35,6 +35,8 @@ const KIDS_CONFIG = {
 
   // 학년별로 패키지에 들어가는 학습 검사
   gradeTest: { pre: 'esra', low: 'pat', mid: 'amt', high: 'mlst', ms: 'mlst', hs: 'mlst' },
+  // 학원·선생님 구매 시 바꿔 넣는 학습 검사 (보호자용 검사 대신)
+  teacherGradeTest: { low: 'rs' },
 
   // 단체 구매 (학원·공부방·과외 선생님)
   group: { min: 5, rate: 10, quoteFrom: 20 },
@@ -79,7 +81,7 @@ const KIDS_CONFIG = {
       note: '입학 전 아이의 패키지 학습 검사입니다.',
     },
     pat: {
-      name: 'PAT-2 부모양육태도검사', short: 'PAT-2', kind: 'add', price: 15000,
+      name: 'PAT-2 부모양육태도검사', short: 'PAT-2', kind: 'add', price: 15000, parentOnly: true,
       en: 'Parenting Attitude Test-2nd Edition',
       grades: ['pre','low','mid','high','ms','hs'],
       target: '부모용: 만 0세 이상 자녀의 부모 · 자녀용: 만 7세 이상', who: '보호자 (자녀용은 아이 본인)', time: '약 20분 · 43문항',
@@ -87,7 +89,7 @@ const KIDS_CONFIG = {
       desc: '아이를 대하는 나의 양육·지도 방식을 점검합니다. 저학년의 공부 습관은 부모님이 어떻게 지도하느냐에 크게 좌우되기 때문에, 1~2학년은 이 검사를 패키지 학습 검사로 씁니다.',
       forWho: ['숙제 시간마다 아이와 부딪힐 때', '내 지도 방식이 아이에게 맞는지 궁금할 때'],
       samples: [['부모용 샘플', S+'mailImg/inpsyt-img/download/2025/250318%20PAT-2%20%EB%B6%80%EB%AA%A8%EC%9A%A9%20%EC%83%98%ED%94%8C.pdf'],['자녀용 샘플', S+'mailImg/inpsyt-img/download/2025/250318%20PAT-2%20%EC%9E%90%EB%85%80%EC%9A%A9%20%EC%83%98%ED%94%8C.pdf']],
-      note: '초등 1~2학년은 패키지에 포함, 다른 학년은 추가 검사로 고를 수 있어요.',
+      note: '보호자 구매에서 초등 1~2학년은 패키지에 포함, 다른 학년은 추가 검사로 고를 수 있어요. 학원·선생님 구매에는 포함되지 않습니다.',
     },
     amt: {
       name: 'AMT 학업동기검사', short: 'AMT', kind: 'grade', price: 9000,
@@ -131,7 +133,7 @@ const KIDS_CONFIG = {
       desc: '집중, 감정, 행동, 적응 기술을 폭넓게 살피는 선별 검사입니다. 학습보다 정서·행동이 먼저 걱정될 때 고르세요. 결과가 높게 나오면 가까운 전문기관 상담을 함께 안내해 드려요.',
       forWho: ['산만함이나 감정 기복이 걱정될 때', '학교·어린이집에서 행동 이야기를 자주 들을 때'],
       samples: [['일반 결과보고서 샘플(아동용)', S+'mailImg/inpsyt-img/download/2024/K%C2%B7BASC-3/K%C2%B7BASC-3_%EB%B6%80%EB%AA%A8%EB%B3%B4%EA%B3%A0%ED%98%95_%EC%95%84%EB%8F%99%EC%9A%A9_%EC%9D%BC%EB%B0%98%20%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C%20%EC%83%98%ED%94%8C.pdf']],
-      note: '개인(보호자) 구매에서만 고를 수 있어요. 단체 구매에는 포함되지 않습니다.',
+      note: '보호자 구매에서만 고를 수 있어요. 학원·선생님 구매에는 포함되지 않습니다.',
     },
     blct: {
       name: 'BLCT 기초학습역량검사', short: 'BLCT', kind: 'add', price: 14000,

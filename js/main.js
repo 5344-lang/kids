@@ -8,15 +8,16 @@ const GKEYS = Object.keys(C.grades);
 const gname = g => C.grades[g].label;
 
 /* 이 학년의 패키지 기본 검사 */
-function coreTests(g, pkg) {
-  const list = [pkg === 'deep' ? 'jtci' : 'sts', C.gradeTest[g]];
+function gradeTestFor(g, teacher) { return teacher && C.teacherGradeTest[g] ? C.teacherGradeTest[g] : C.gradeTest[g]; }
+function coreTests(g, pkg, teacher) {
+  const list = [pkg === 'deep' ? 'jtci' : 'sts', gradeTestFor(g, teacher)];
   if (T.sct.grades.includes(g)) list.push('sct');
   return list;
 }
 /* 이 학년에서 고를 수 있는 추가 검사 / 진로 옵션 */
 function addOns(g, opts = {}) {
-  const core = [C.gradeTest[g]];
-  return Object.keys(T).filter(k => T[k].kind === 'add' && T[k].grades.includes(g) && !core.includes(k) && !(opts.group && T[k].personalOnly));
+  const core = [gradeTestFor(g, opts.group)];
+  return Object.keys(T).filter(k => T[k].kind === 'add' && T[k].grades.includes(g) && !core.includes(k) && !(opts.group && (T[k].personalOnly || T[k].parentOnly)));
 }
 function careers(g) { return Object.keys(T).filter(k => T[k].kind === 'career' && T[k].grades.includes(g)); }
 function gradeRange(k) {
@@ -104,7 +105,7 @@ function addonRow(k) {
   const t = T[k];
   return `<a class="arow" href="test.html?t=${k}">
     <div><b>${t.name}</b><small>${t.target}</small>
-    ${t.personalOnly ? '<em>개인 구매 전용</em>' : ''}${k === 'blct' ? '<em>혼자 풀기 필수</em>' : ''}${k === 'pat' ? '<em>1~2학년은 패키지에 포함</em>' : ''}</div>
+    ${t.personalOnly || t.parentOnly ? '<em>보호자 구매 전용</em>' : ''}${k === 'blct' ? '<em>혼자 풀기 필수</em>' : ''}${k === 'pat' ? '<em>1~2학년 보호자 구매는 패키지에 포함</em>' : ''}</div>
     <span class="aprice">+${won(t.price)}</span></a>`;
 }
 
@@ -125,7 +126,7 @@ function renderCalc() {
   const core = coreTests(calc.g, calc.pkg);
   $('#calcList').innerHTML =
     core.map(k => `<div class="ci inc"><span>✓</span><div class="ci-main"><b>${T[k].name}</b><small>패키지 포함${k === 'sct' ? ' · 후기 작성 시 무료' : ''}</small></div><span class="ci-price">포함</span></div>`).join('') +
-    avail.map(k => `<label class="ci"><input type="checkbox" data-k="${k}" ${calc.picks.has(k) ? 'checked' : ''}><div class="ci-main"><b>${T[k].name}</b><small>${T[k].kind === 'career' ? '진로 옵션' : '추가 검사'}${T[k].personalOnly ? ' · 개인 구매 전용' : ''}</small></div><span class="ci-price">+${won(T[k].price)}</span></label>`).join('');
+    avail.map(k => `<label class="ci"><input type="checkbox" data-k="${k}" ${calc.picks.has(k) ? 'checked' : ''}><div class="ci-main"><b>${T[k].name}</b><small>${T[k].kind === 'career' ? '진로 옵션' : '추가 검사'}${T[k].personalOnly || T[k].parentOnly ? ' · 보호자 구매 전용' : ''}</small></div><span class="ci-price">+${won(T[k].price)}</span></label>`).join('');
   sumCalc();
 }
 function sumCalc() {

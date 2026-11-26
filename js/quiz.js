@@ -2,8 +2,8 @@
 const QS = [
   { id: 'bounce', q: '속상한 일이 있어도 금방 털고 일어나요.', yes: [], no: ['rs'] },
   { id: 'friend', q: '친구들과 잘 어울려 지내요.', yes: [], no: ['rs', 'kbasc'] },
-  { id: 'focus',  q: '가만히 앉아 있기 힘들거나, 기분이 자주 크게 바뀌어요.', yes: ['kbasc'], no: [] },
-  { id: 'clash',  q: '공부 문제로 집에서 자주 부딪혀요.', t: '공부 문제로 보호자와 자주 부딪힌다고 들었어요.', yes: ['pat'], no: [], skip: g => g === 'low' },
+  { id: 'focus', parentOnly: true,  q: '가만히 앉아 있기 힘들거나, 기분이 자주 크게 바뀌어요.', yes: ['kbasc'], no: [] },
+  { id: 'clash', parentOnly: true,  q: '공부 문제로 집에서 자주 부딪혀요.', t: '공부 문제로 보호자와 자주 부딪힌다고 들었어요.', yes: ['pat'], no: [], skip: g => g === 'low' },
   { id: 'gap',    q: '과목마다 잘하는 것과 못하는 것의 차이가 커요.', yes: ['blct'], no: [], only: ['high', 'ms', 'hs'] },
   { id: 'deep',   q: '아이 성향(기질과 성격)을 깊이 알고 싶어요.', t: '학생 성향(기질과 성격)을 깊이 알고 싶어요.', yes: ['deep'], no: [], only: ['pre', 'low', 'mid'] },
   { id: 'career', q: '앞으로 하고 싶은 일(진로)도 함께 알아보고 싶어요.', yes: ['career'], no: [], skip: g => g === 'pre' },
@@ -29,7 +29,7 @@ function stepWho() {
   box().onclick = e => {
     const b = e.target.closest('[data-w]'); if (!b) return;
     st.who = b.dataset.w;
-    st.qs = QS.filter(q => (!q.only || q.only.includes(st.g)) && !(q.skip && q.skip(st.g))).slice(0, 6);
+    st.qs = QS.filter(q => !(st.who === 'teacher' && q.parentOnly) && (!q.only || q.only.includes(st.g)) && !(q.skip && q.skip(st.g))).slice(0, 6);
     st.step = 0; stepQ();
   };
 }
@@ -57,12 +57,12 @@ function result() {
   const flags = [];
   st.qs.forEach(q => flags.push(...q[st.ans[q.id]]));
   const avail = addOns(g, { group: teacher });
-  const order = ['rs', 'kbasc', 'pat', 'blct'];
+  const order = ['rs', 'kbasc', 'pat', 'blct'].filter(k => !(teacher && (T[k].personalOnly || T[k].parentOnly)));
   const picks = order.filter(k => flags.includes(k) && avail.includes(k)).slice(0, 2);
   const deep = flags.includes('deep') || picks.length >= 2;
   const pkg = deep ? 'deep' : 'basic';
   const car = flags.includes('career') ? careers(g) : [];
-  const core = coreTests(g, pkg);
+  const core = coreTests(g, pkg, teacher);
 
   let extra = picks.reduce((a, k) => a + T[k].price, 0) + car.reduce((a, k) => a + T[k].price, 0);
   if (deep && picks.length) extra -= Math.max(...picks.map(k => T[k].price));
@@ -85,6 +85,7 @@ function result() {
       ${flags.includes('habit') ? `<p class="tip">💡 스스로 시작하기 어려운 아이라면, 해석지의 4주 학습 가이드에서 "시작하는 습관"을 중심으로 잡아 드려요.</p>` : ''}
     </div>
     <div class="rprice"><span>예상 금액 (1명)</span><strong>${won(C.packages[pkg].price + extra)}</strong></div>
+    ${teacher && ['pre','low','mid','high'].includes(g) ? '<p class="tip">📩 초등 이하 기질검사(STS·JTCI)는 보호자가 응답하는 검사라, 링크를 보호자께 바로 보내 드려요.</p>' : ''}
     ${teacher ? `<p class="tip">🧑‍🏫 ${C.group.min}명 이상이면 ${C.group.rate}% 할인되고, 반 전체 요약표를 함께 드려요. 14세 미만 학생은 보호자 동의서가 필요해요.</p>` : ''}
     <div class="hero-cta">
       <button class="btn btn-big" id="apply">이 구성으로 신청하기</button>
