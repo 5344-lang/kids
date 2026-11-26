@@ -1,87 +1,162 @@
-(function () {
-  const C = KIDS_CONFIG;
-  const won = n => n.toLocaleString('ko-KR') + '원';
+/* 똑심마인드 키즈 — 공통 + 메인 페이지 */
+const C = KIDS_CONFIG;
+const T = C.tests;
+const won = n => n.toLocaleString('ko-KR') + '원';
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const GKEYS = Object.keys(C.grades);
+const gname = g => C.grades[g].label;
 
-  // 링크
-  const contact = C.contactUrl;
-  document.querySelectorAll('.js-contact').forEach(a => { a.href = contact; a.target = '_blank'; a.rel = 'noopener'; });
-  document.querySelectorAll('.js-survey').forEach(a => { a.href = C.surveyUrl || contact; a.target = '_blank'; a.rel = 'noopener'; });
-  document.querySelectorAll('.js-main').forEach(a => { a.href = C.mainSite; });
-  document.querySelectorAll('.js-area').forEach(el => { el.textContent = C.area; });
+/* 이 학년의 패키지 기본 검사 */
+function coreTests(g, pkg) {
+  const list = [pkg === 'deep' ? 'jtci' : 'sts', C.gradeTest[g]];
+  if (T.sct.grades.includes(g)) list.push('sct');
+  return list;
+}
+/* 이 학년에서 고를 수 있는 추가 검사 / 진로 옵션 */
+function addOns(g, opts = {}) {
+  const core = [C.gradeTest[g]];
+  return Object.keys(T).filter(k => T[k].kind === 'add' && T[k].grades.includes(g) && !core.includes(k) && !(opts.group && T[k].personalOnly));
+}
+function careers(g) { return Object.keys(T).filter(k => T[k].kind === 'career' && T[k].grades.includes(g)); }
+function gradeRange(k) {
+  const gs = T[k].grades; if (gs.length === GKEYS.length) return '전 학년';
+  return gs.map(gname).join(' · ');
+}
 
-  // 가격 표시
-  document.querySelectorAll('[data-base]').forEach(el => { el.textContent = won(C.onlineBase); });
-  document.querySelectorAll('[data-price]').forEach(el => {
-    const v = C.visit[el.dataset.price];
-    if (v) el.innerHTML = won(v.price);
-  });
+/* 공통 링크 */
+function wireLinks() {
+  $$('.js-contact').forEach(a => { a.href = C.contactUrl; a.target = '_blank'; a.rel = 'noopener'; });
+  $$('.js-survey').forEach(a => { a.href = C.surveyUrl || C.contactUrl; a.target = '_blank'; a.rel = 'noopener'; });
+  $$('.js-main').forEach(a => { a.href = C.mainSite; a.target = '_blank'; a.rel = 'noopener'; });
+}
 
-  // 학년별 검사 안내
-  const GRADES = {
-    pre:  { label: '입학 전', icon: '🐣', q: '학교 갈 준비가 되었을까?',
-            online: ['sts', 'esra'], face: ['E-RAM 조기 읽기검사', 'BASA:EL 초기문해'],
-            look: ['한글 읽기와 이야기 이해', '10분 이상 앉아서 활동하기', '낯선 상황에 적응하는 방식'] },
-    low:  { label: '1~2학년', icon: '🎒', q: '읽기 기초가 잘 잡혔을까?',
-            online: ['sts', 'pat'], face: ['초등 저학년 초기 문해력 검사', 'BASA:R 읽기검사'],
-            look: ['소리 내어 읽기의 정확도와 속도', '읽은 내용을 말로 설명하기', '숙제를 시작하는 방식'] },
-    mid:  { label: '3학년', icon: '📚', q: '읽기에서 이해로 넘어가고 있을까?',
-            online: ['sts', 'pat'], face: ['BASA:R 읽기검사', 'BASA:RC 읽기이해'],
-            look: ['교과서 글의 중심 내용 찾기', '긴 글을 끝까지 읽는 힘', '모를 때의 반응'] },
-    high: { label: '4~6학년', icon: '✏️', q: '스스로 공부하는 방법을 알고 있을까?',
-            online: ['mlst', 'sts', 'blct'], face: ['BASA:RC 읽기이해'],
-            look: ['비문학 글의 구조 파악', '공부 계획과 집중 전략', '문제를 푸는 순서'] },
-    ms:   { label: '중학생', icon: '🎓', q: '중학교 국어에 맞는 공부법을 쓰고 있을까?',
-            online: ['mlst', 'sts', 'blct'], face: ['RWT 읽기·쓰기 검사 (필요할 때)'],
-            look: ['문학·비문학 독해 방식', '시험 공부 계획', '서술형 답안 쓰기'] },
-  };
-  const order = ['pre', 'low', 'mid', 'high', 'ms'];
+/* ---------- 메인 페이지 ---------- */
+function renderPlans() {
+  const el = $('#plans'); if (!el) return;
+  el.innerHTML = ['basic', 'deep'].map(k => {
+    const p = C.packages[k];
+    return `<article class="plan ${k === 'deep' ? 'best' : ''}">
+      ${k === 'deep' ? '<p class="plan-badge">가장 많이 찾는</p>' : ''}
+      <p class="plan-tag">${p.tag}</p>
+      <h3>${p.name}</h3>
+      <p class="plan-price">${won(p.price)}</p>
+      <ul>${p.items.map(i => `<li>${i}</li>`).join('')}</ul>
+      <a class="btn ${k === 'deep' ? '' : 'btn-line'} js-contact" href="#">신청하기</a>
+    </article>`;
+  }).join('');
+}
 
-  const panel = document.getElementById('gradePanel');
-  function renderPanel(g) {
-    const d = GRADES[g];
-    const online = d.online.map(k => `<li><b>${C.tests[k].name}</b><span>${C.tests[k].who}</span></li>`).join('');
-    const face = d.face.map(f => `<li><b>${f}</b><span>방문 때 직접 실시</span></li>`).join('');
-    panel.innerHTML = `
-      <div class="gp-q"><span class="gp-ic">${d.icon}</span><div><small>${d.label}</small><b>${d.q}</b></div></div>
-      <div class="gp-cols">
-        <div><h4>온라인으로 하는 검사</h4><ul class="gp-list">${online}</ul></div>
-        <div><h4>방문 때 하는 읽기 검사</h4><ul class="gp-list">${face}</ul></div>
-        <div><h4>직접 만나서 보는 것</h4><ul class="gp-look">${d.look.map(x => `<li>${x}</li>`).join('')}</ul></div>
-      </div>`;
-  }
-  document.querySelectorAll('.gtab').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('.gtab').forEach(x => x.classList.toggle('on', x === b));
-    renderPanel(b.dataset.g);
-  }));
-  renderPanel('pre');
+function renderGrade(g) {
+  $$('#gradeTabs .gtab').forEach(b => b.classList.toggle('on', b.dataset.g === g));
+  const gt = T[C.gradeTest[g]];
+  const adds = addOns(g), cars = careers(g);
+  const chip = k => `<a class="tchip" href="test.html?t=${k}">${T[k].short}</a>`;
+  $('#gradePanel').innerHTML = `
+    <div class="gp-cols">
+      <div><h4>온라인 기본 ${won(C.packages.basic.price)}</h4>
+        <ul class="gp-list"><li><b>STS 6요인 기질검사</b><span>${T.sts.who}</span></li>
+        <li><b>${gt.name}</b><span>${gt.who}</span></li>
+        ${T.sct.grades.includes(g) ? '<li><b>SCT 문장완성검사</b><span>후기 작성 시 무료</span></li>' : ''}</ul></div>
+      <div><h4>온라인 심화 ${won(C.packages.deep.price)}</h4>
+        <ul class="gp-list"><li><b>JTCI 기질 및 성격검사</b><span>상세 해석보고서 포함</span></li>
+        <li><b>${gt.name}</b><span>${gt.who}</span></li>
+        <li><b>추가 검사 1개 무료</b><span>${adds.map(k => T[k].short).join(', ')} 중 선택</span></li>
+        ${T.sct.grades.includes(g) ? '<li><b>SCT 문장완성검사</b><span>후기 작성 시 무료</span></li>' : ''}</ul></div>
+      <div><h4>더할 수 있는 검사</h4>
+        <div class="tchips">${adds.map(chip).join('')}</div>
+        ${cars.length ? `<h4 style="margin-top:14px">진로 옵션</h4><div class="tchips">${cars.map(chip).join('')}</div>` : '<p class="small-note">진로 옵션은 초등 2학년부터 가능해요.</p>'}
+      </div>
+    </div>`;
+}
 
-  // 온라인 가격 계산기
-  const cg = document.getElementById('calcGrades');
-  const cl = document.getElementById('calcList');
-  let cur = 'low';
-  cg.innerHTML = order.map(g => `<button type="button" class="cg${g === cur ? ' on' : ''}" data-g="${g}">${GRADES[g].label}</button>`).join('');
-  function renderCalc() {
-    const keys = Object.keys(C.tests).filter(k => C.tests[k].grades.includes(cur));
-    const rec = C.recommend[cur] || [];
-    cl.innerHTML = keys.map(k => {
-      const t = C.tests[k];
-      return `<label class="ci"><input type="checkbox" value="${k}"${rec.includes(k) ? ' checked' : ''}>
-        <span class="ci-main"><b>${t.name}</b><small>${t.desc}</small><em>${t.who}</em></span>
-        <span class="ci-price">${won(t.price)}</span></label>`;
-    }).join('');
-    cl.querySelectorAll('input').forEach(i => i.addEventListener('change', sum));
-    sum();
-  }
-  function sum() {
-    const picked = [...cl.querySelectorAll('input:checked')].map(i => C.tests[i.value].price);
-    const tests = picked.reduce((a, b) => a + b, 0);
-    document.getElementById('calcTests').textContent = won(tests);
-    document.getElementById('calcSum').textContent = won(C.onlineBase + tests);
-  }
-  cg.querySelectorAll('.cg').forEach(b => b.addEventListener('click', () => {
-    cur = b.dataset.g;
-    cg.querySelectorAll('.cg').forEach(x => x.classList.toggle('on', x === b));
+function addonRow(k) {
+  const t = T[k];
+  return `<a class="arow" href="test.html?t=${k}">
+    <div><b>${t.name}</b><small>${t.target}</small>
+    ${t.personalOnly ? '<em>개인 구매 전용</em>' : ''}${k === 'blct' ? '<em>혼자 풀기 필수</em>' : ''}${k === 'pat' ? '<em>1~2학년은 패키지에 포함</em>' : ''}</div>
+    <span class="aprice">+${won(t.price)}</span></a>`;
+}
+
+function renderAddons() {
+  const a = $('#addonList'); if (!a) return;
+  a.innerHTML = Object.keys(T).filter(k => T[k].kind === 'add').map(addonRow).join('');
+  $('#careerList').innerHTML = Object.keys(T).filter(k => T[k].kind === 'career').map(addonRow).join('');
+}
+
+/* 가격 계산 */
+const calc = { g: 'high', pkg: 'basic', picks: new Set() };
+function renderCalc() {
+  const gEl = $('#calcGrades'); if (!gEl) return;
+  gEl.innerHTML = GKEYS.map(g => `<button class="cg ${g === calc.g ? 'on' : ''}" data-g="${g}">${gname(g)}</button>`).join('');
+  $('#calcPkgs').innerHTML = ['basic', 'deep'].map(p => `<button class="cg ${p === calc.pkg ? 'on' : ''}" data-p="${p}">${C.packages[p].name}</button>`).join('');
+  const avail = [...addOns(calc.g), ...careers(calc.g)];
+  [...calc.picks].forEach(k => { if (!avail.includes(k)) calc.picks.delete(k); });
+  const core = coreTests(calc.g, calc.pkg);
+  $('#calcList').innerHTML =
+    core.map(k => `<div class="ci inc"><span>✓</span><div class="ci-main"><b>${T[k].name}</b><small>패키지 포함${k === 'sct' ? ' · 후기 작성 시 무료' : ''}</small></div><span class="ci-price">포함</span></div>`).join('') +
+    avail.map(k => `<label class="ci"><input type="checkbox" data-k="${k}" ${calc.picks.has(k) ? 'checked' : ''}><div class="ci-main"><b>${T[k].name}</b><small>${T[k].kind === 'career' ? '진로 옵션' : '추가 검사'}${T[k].personalOnly ? ' · 개인 구매 전용' : ''}</small></div><span class="ci-price">+${won(T[k].price)}</span></label>`).join('');
+  sumCalc();
+}
+function sumCalc() {
+  const base = C.packages[calc.pkg].price;
+  const addPrices = [...calc.picks].filter(k => T[k].kind === 'add').map(k => T[k].price);
+  const carPrices = [...calc.picks].filter(k => T[k].kind === 'career').map(k => T[k].price);
+  let free = 0;
+  if (calc.pkg === 'deep' && addPrices.length) free = Math.max(...addPrices);
+  const extra = addPrices.reduce((a, b) => a + b, 0) + carPrices.reduce((a, b) => a + b, 0) - free;
+  $('#calcBreak').innerHTML = `${C.packages[calc.pkg].name} <b>${won(base)}</b> + 추가 <b>${won(extra)}</b>${free ? ` <small>(추가 검사 1개 무료 적용)</small>` : ''}`;
+  $('#calcSum').textContent = won(base + extra);
+}
+function wireCalc() {
+  const box = $('#calc'); if (!box) return;
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.cg'); if (!b) return;
+    if (b.dataset.g) calc.g = b.dataset.g;
+    if (b.dataset.p) calc.pkg = b.dataset.p;
     renderCalc();
-  }));
-  renderCalc();
-})();
+  });
+  box.addEventListener('change', e => {
+    const k = e.target.dataset.k; if (!k) return;
+    e.target.checked ? calc.picks.add(k) : calc.picks.delete(k);
+    sumCalc();
+  });
+}
+
+function renderTestCards(el) {
+  if (!el) return;
+  const order = ['sts', 'jtci', 'esra', 'pat', 'amt', 'mlst', 'rs', 'kbasc', 'blct', 'kicsl', 'holland', 'sct'];
+  const kindLabel = { core: '패키지 기질검사', grade: '학년별 학습 검사', add: '추가 검사', career: '진로 옵션', free: '후기 작성 시 무료' };
+  el.innerHTML = order.map(k => {
+    const t = T[k];
+    const label = k === 'pat' ? '1~2학년 학습 검사 · 추가 검사' : kindLabel[t.kind];
+    return `<a class="tcard" href="test.html?t=${k}">
+      <span class="tkind k-${t.kind}">${label}</span>
+      <b>${t.name}</b>
+      <small>${t.target}</small>
+      <p>${t.desc.split('.')[0]}.</p>
+      <span class="tmore">${t.samples.length ? '샘플 결과지 보기 →' : '자세히 보기 →'}</span>
+    </a>`;
+  }).join('');
+}
+
+function initMain() {
+  renderPlans();
+  const tabs = $('#gradeTabs');
+  if (tabs) {
+    tabs.innerHTML = GKEYS.map(g => `<button class="gtab" data-g="${g}"><span>${C.grades[g].icon}</span>${gname(g)}</button>`).join('');
+    tabs.addEventListener('click', e => { const b = e.target.closest('.gtab'); if (b) renderGrade(b.dataset.g); });
+    renderGrade('pre');
+  }
+  renderAddons();
+  renderCalc(); wireCalc();
+  $$('[data-group-rate]').forEach(e => e.textContent = C.group.rate + '%');
+  $$('[data-group-min]').forEach(e => e.textContent = C.group.min);
+  $$('[data-group-quote]').forEach(e => e.textContent = C.group.quoteFrom);
+  renderTestCards($('#testCards'));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof PAGE === 'undefined') initMain();
+  wireLinks();
+});
