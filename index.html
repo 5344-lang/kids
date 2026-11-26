@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20261127h">
+<link rel="stylesheet" href="css/style.css?v=20261127i">
 </head>
 <body>
 
@@ -39,7 +39,7 @@
       <h1>열심히 하는데 왜 안 될까?<br><span class="hl">공부법은 아이마다 달라요</span></h1>
       <p class="lead">타고난 기질과 지금의 공부 습관을 표준화된 검사로 확인하고, 아이에게 맞는 공부 방법을 쉬운 말로 정리한 해석지를 보내 드립니다. 전국 어디서나 휴대폰으로 진행해요.</p>
       <div class="hero-cta">
-        <a class="btn btn-big" href="quiz.html">1분 맞춤 추천 받기</a>
+        <a class="btn btn-big" href="#reco">1분 맞춤 추천 받기</a>
         <a class="btn btn-ghost" href="#price">패키지 보기</a>
       </div>
       <ul class="chips">
@@ -54,6 +54,17 @@
       <div class="card-float c3"><span class="ic">🧭</span><b>공부 방법</b><small>집·수업에서 바로 쓰는</small></div>
       <div class="blob"></div>
     </div>
+  </div>
+</section>
+
+<!-- RECO -->
+<section id="reco" class="reco">
+  <div class="wrap quiz-wrap">
+    <p class="eyebrow">1분 맞춤 추천</p>
+    <h2 class="reco-title">몇 가지만 답하면 딱 맞는 구성을 알려 드려요</h2>
+    <div class="qbar"><i id="qbar"></i></div>
+    <div class="qcard" id="quiz"></div>
+    <p class="small-note center">추천은 참고용이에요. 신청 후 사전 질문지를 보고 최종으로 정해요. · <a href="#price">패키지 바로 보기 →</a></p>
   </div>
 </section>
 
@@ -96,6 +107,17 @@
       <div class="grade-tabs" id="gradeTabs"></div>
       <div class="grade-panel" id="gradePanel"></div>
     </div>
+  </div>
+</section>
+
+<!-- ANALYSIS BAND -->
+<section class="ana-band">
+  <div class="wrap quiz-cta-in">
+    <div>
+      <h2>이미 받은 검사 결과지가 있다면</h2>
+      <p>학교·센터·학원에서 받은 웩슬러, TCI, MLST 결과지를 쉬운 말과 공부 방법으로 풀어 드려요. 29,000원부터.</p>
+    </div>
+    <a class="btn btn-big" href="analysis.html">결과지 분석 보기</a>
   </div>
 </section>
 
@@ -146,28 +168,6 @@
         </ol>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- QUIZ CTA -->
-<section class="quiz-cta">
-  <div class="wrap quiz-cta-in">
-    <div>
-      <h2>어떤 검사가 맞을지 모르겠다면</h2>
-      <p>학년을 고르고 "예 / 아니오"로 6가지만 답하면 맞는 패키지와 추가 검사를 추천해 드려요.</p>
-    </div>
-    <a class="btn btn-big" href="quiz.html">맞춤 추천 시작</a>
-  </div>
-</section>
-
-<!-- ANALYSIS BAND -->
-<section class="ana-band">
-  <div class="wrap quiz-cta-in">
-    <div>
-      <h2>이미 받은 검사 결과지가 있다면</h2>
-      <p>학교·센터·학원에서 받은 웩슬러, TCI, MLST 결과지를 쉬운 말과 공부 방법으로 풀어 드려요. 29,000원부터.</p>
-    </div>
-    <a class="btn btn-big" href="analysis.html">결과지 분석 보기</a>
   </div>
 </section>
 
@@ -254,7 +254,8 @@
   </div>
 </footer>
 
-<script src="js/config.js?v=20261127h"></script>
-<script src="js/main.js?v=20261127h"></script>
+<script src="js/config.js?v=20261127i"></script>
+<script src="js/main.js?v=20261127i"></script>
+<script src="js/quiz.js?v=20261127i"></script>
 </body>
 </html>

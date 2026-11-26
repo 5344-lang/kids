@@ -362,3 +362,12 @@ details p { margin: 10px 0 0; color: var(--sub); }
 .nav-cta { display: flex; gap: 8px; }
 .btn-quiz { background: var(--coral); border-color: var(--coral); }
 @media (max-width: 560px) { .nav-cta .btn-sm { padding: 6px 12px; font-size: .92rem; } .logo { font-size: 1.15rem; } }
+
+/* 홈 맞춤 추천 */
+.reco { background: #fff; padding-top: 56px; }
+.reco .eyebrow { display: table; margin: 0 auto 10px; }
+.reco-title { font-family: 'Jua', sans-serif; font-weight: 400; font-size: 2rem; text-align: center; margin: 0 0 18px; line-height: 1.3; }
+.qhint { color: var(--sub); margin: -12px 0 18px; }
+.qcard .calc-list { gap: 8px; margin-bottom: 8px; }
+.hero { padding: 48px 0 56px; }
+@media (max-width: 560px) { .reco-title { font-size: 1.5rem; } }
