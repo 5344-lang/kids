@@ -67,7 +67,7 @@ function result() {
   const order = ['rs', 'kbasc', 'pat', 'blct'];
   const recAdds = order.filter(k => flags.includes(k) && avail.includes(k)).slice(0, 2);
   const recCar = flags.includes('career') ? careers(g) : [];
-  const recPkg = teacher ? 'teacher' : (flags.includes('deep') || recAdds.length >= 2) ? 'deep' : 'basic';
+  const recPkg = teacher ? 'teacher' : (flags.includes('career') && (flags.includes('deep') || recAdds.length >= 1)) ? 'premium' : (flags.includes('deep') || recAdds.length >= 2) ? 'deep' : 'basic';
   // 고를 수 있는 전체 목록: 추천 먼저
   const addList = [...recAdds, ...avail.filter(k => !recAdds.includes(k))];
   const carList = careers(g);
@@ -90,7 +90,8 @@ function result() {
     const P = PKG(sel.pkg);
     const adds = [...sel.picks].filter(k => T[k].kind === 'add').map(k => T[k].price);
     const cars = [...sel.picks].filter(k => T[k].kind === 'career').map(k => T[k].price);
-    const free = sel.pkg === 'deep' && adds.length ? Math.max(...adds) : 0;
+    const jt = sel.pkg === 'deep' || sel.pkg === 'premium';
+    const free = (jt && adds.length ? Math.max(...adds) : 0) + (sel.pkg === 'premium' && cars.length ? Math.max(...cars) : 0);
     return { P, free, total: P.price + adds.reduce((a, b) => a + b, 0) + cars.reduce((a, b) => a + b, 0) - free };
   }
   function render() {
@@ -99,13 +100,13 @@ function result() {
     box().innerHTML = `
     <p class="qnum">추천 결과 · ${gname(g)}</p>
     <h2>${PKG(recPkg).name}${teacher ? '을' : ' 패키지를'} 추천해요</h2>
-    ${teacher ? '' : `<div class="pkg-toggle">${['basic', 'deep'].map(p => `<button class="cg ${sel.pkg === p ? 'on' : ''}" data-p="${p}">${C.packages[p].name} ${won(C.packages[p].price)}${p === recPkg ? ' · 추천' : ''}</button>`).join('')}</div>`}
+    ${teacher ? '' : `<div class="pkg-toggle">${['basic', 'deep', 'premium'].map(p => `<button class="cg ${sel.pkg === p ? 'on' : ''}" data-p="${p}">${C.packages[p].name} ${won(C.packages[p].price)}${p === recPkg ? ' · 추천' : ''}</button>`).join('')}</div>`}
     <div class="rbox">
       <h4>${teacher ? '들어가는 학습 검사' : '패키지에 들어가는 검사'}</h4>
       <ul>${core.map(k => `<li><a href="test.html?t=${k}"><b>${T[k].name}</b></a>${k === 'sct' ? '<small>후기 작성 시 무료</small>' : ''}</li>`).join('')}
-      ${sel.pkg === 'deep' ? '<li><b>전화 해석 상담 20분</b><small>심화 패키지 포함</small></li>' : ''}</ul>
-      ${addList.length ? `<h4>추가 검사 <span class="opt">선택</span></h4>${sel.pkg === 'deep' ? '<p class="small-note">심화 패키지는 고른 추가 검사 중 1개가 무료예요.</p>' : ''}<div class="calc-list">${addList.map(row).join('')}</div>` : ''}
-      ${carList.length ? `<h4>진로 옵션 <span class="opt">선택</span></h4><div class="calc-list">${carList.map(row).join('')}</div>` : ''}
+      ${sel.pkg !== 'basic' && !teacher ? `<li><b>공부·학원 로드맵</b><small>학원·과외 고르는 기준, 수업 방식, 문제집·과제 분량</small></li><li><b>크몽 메시지 Q&A</b><small>리포트 받은 뒤 ${sel.pkg === 'premium' ? 14 : 7}일</small></li>` : ''}${sel.pkg === 'premium' ? '<li><b>심층 고민 3개 답변</b><small>프리미엄 포함</small></li>' : ''}</ul>
+      ${addList.length ? `<h4>추가 검사 <span class="opt">선택</span></h4>${sel.pkg === 'deep' || sel.pkg === 'premium' ? '<p class="small-note">심화·프리미엄은 고른 추가 검사 중 1개가 무료예요.</p>' : ''}<div class="calc-list">${addList.map(row).join('')}</div>` : ''}
+      ${carList.length ? `<h4>진로 옵션 <span class="opt">선택</span></h4>${sel.pkg === 'premium' ? '<p class="small-note">프리미엄은 진로 옵션 1개가 포함돼요.</p>' : ''}<div class="calc-list">${carList.map(row).join('')}</div>` : ''}
       ${flags.includes('habit') ? `<p class="tip">💡 ${teacher ? '해석지의 지도 포인트에서 학생에게 맞는 과제 분량과 시작 습관 잡는 방법을 정리해 드려요.' : '스스로 시작하기 어려운 아이라면, 해석지의 4주 학습 가이드에서 "시작하는 습관"을 중심으로 잡아 드려요.'}</p>` : ''}
     </div>
     <div class="rprice"><span>예상 금액 (1명)<small>${P.name} ${won(P.price)}${total !== P.price ? ` + 선택 ${won(total - P.price)}` : ''}${free ? ' (1개 무료 적용)' : ''}</small></span><strong>${won(total)}</strong></div>

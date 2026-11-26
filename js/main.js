@@ -11,7 +11,7 @@ const gname = g => C.grades[g].label;
 const PKG = k => k === 'teacher' ? C.teacherPkg : C.packages[k];
 function coreTests(g, pkg) {
   if (pkg === 'teacher') return [C.teacherGradeTest[g]];
-  const list = [pkg === 'deep' ? 'jtci' : 'sts', C.gradeTest[g]];
+  const list = [pkg === 'basic' ? 'sts' : 'jtci', C.gradeTest[g]];
   if (T.sct.grades.includes(g)) list.push('sct');
   return list;
 }
@@ -66,12 +66,12 @@ function wireLinks() {
 /* ---------- 메인 페이지 ---------- */
 function renderPlans() {
   const el = $('#plans'); if (!el) return;
-  el.innerHTML = ['basic', 'deep'].map(k => {
+  el.innerHTML = ['basic', 'deep', 'premium'].map(k => {
     const p = C.packages[k];
     return `<article class="plan ${k === 'deep' ? 'best' : ''}">
       ${k === 'deep' ? '<p class="plan-badge">가장 많이 찾는</p>' : ''}
-      <p class="plan-tag">${p.tag}</p>
-      <h3>${p.name}</h3>
+      <p class="plan-tag">${k === 'deep' ? p.name : p.tag + ' · ' + p.name}</p>
+      <h3>${p.title}</h3>
       <p class="plan-price">${won(p.price)}</p>
       <ul>${p.items.map(i => `<li>${i}</li>`).join('')}</ul>
       <a class="btn ${k === 'deep' ? '' : 'btn-line'} js-contact" href="#">신청하기</a>
@@ -90,10 +90,11 @@ function renderGrade(g) {
         <ul class="gp-list"><li><b>STS 6요인 기질검사</b><span>${T.sts.who}</span></li>
         <li><b>${gt.name}</b><span>${gt.who}</span></li>
         ${T.sct.grades.includes(g) ? '<li><b>SCT 문장완성검사</b><span>후기 작성 시 무료</span></li>' : ''}</ul></div>
-      <div><h4>온라인 심화 ${won(C.packages.deep.price)}</h4>
+      <div><h4>온라인 심화 ${won(C.packages.deep.price)} · 프리미엄 ${won(C.packages.premium.price)}</h4>
         <ul class="gp-list"><li><b>JTCI 기질 및 성격검사</b><span>상세 해석보고서 포함</span></li>
         <li><b>${gt.name}</b><span>${gt.who}</span></li>
         <li><b>추가 검사 1개 무료</b><span>${adds.map(k => T[k].short).join(', ')} 중 선택</span></li>
+        ${cars.length ? `<li><b>프리미엄: 진로 옵션 1개 포함</b><span>${cars.map(k => T[k].short).join(', ')}</span></li>` : ''}
         ${T.sct.grades.includes(g) ? '<li><b>SCT 문장완성검사</b><span>후기 작성 시 무료</span></li>' : ''}</ul></div>
       <div><h4>더할 수 있는 검사</h4>
         <div class="tchips">${adds.map(chip).join('')}</div>
@@ -121,17 +122,18 @@ const calc = { g: 'high', pkg: 'basic', picks: new Set() };
 function renderCalc() {
   const gEl = $('#calcGrades'); if (!gEl) return;
   gEl.innerHTML = GKEYS.map(g => `<button class="cg ${g === calc.g ? 'on' : ''}" data-g="${g}">${gname(g)}</button>`).join('');
-  $('#calcPkgs').innerHTML = ['basic', 'deep', 'teacher'].map(p => `<button class="cg ${p === calc.pkg ? 'on' : ''}" data-p="${p}">${PKG(p).name}</button>`).join('');
+  $('#calcPkgs').innerHTML = ['basic', 'deep', 'premium', 'teacher'].map(p => `<button class="cg ${p === calc.pkg ? 'on' : ''}" data-p="${p}">${PKG(p).name}</button>`).join('');
   const avail = [...addOns(calc.g, { group: calc.pkg === 'teacher' }), ...careers(calc.g)];
   [...calc.picks].forEach(k => { if (!avail.includes(k)) calc.picks.delete(k); });
   const core = coreTests(calc.g, calc.pkg);
   const incRow = (name, sub, deepTag) => `<div class="ci inc${deepTag ? ' deep' : ''}"><span>✓</span><div class="ci-main"><b>${name}</b><small>${sub}</small></div><span class="ci-price">${deepTag ? '심화 포함' : '포함'}</span></div>`;
-  const deep = calc.pkg === 'deep';
+  const deep = calc.pkg === 'deep' || calc.pkg === 'premium';
+  const prem = calc.pkg === 'premium';
   const sctOk = T.sct.grades.includes(calc.g);
   $('#calcList').innerHTML =
     core.filter(k => k !== 'sct').map(k => incRow(T[k].name + (k === 'jtci' ? ' + 상세 해석보고서' : ''), k === 'jtci' ? 'STS 대신 기질과 성격을 함께 보는 검사' : '패키지 포함', k === 'jtci')).join('') +
     (calc.pkg !== 'teacher' ? (sctOk ? incRow('SCT 문장완성검사', '후기 작성 시 무료 · 아이 속마음을 아이 말로 확인', deep) : `<div class="ci inc off"><span>–</span><div class="ci-main"><b>SCT 문장완성검사</b><small>글을 직접 써야 해서 3학년부터 가능해요</small></div><span class="ci-price">해당 없음</span></div>`) : '') +
-    (deep ? incRow('추가 검사 1개 무료', '아래 추가 검사 중 하나를 고르면 1개 가격이 빠져요', true) + incRow('전화 해석 상담 20분', '결과를 직접 설명해 드려요', true) : '') +
+    (deep ? incRow('추가 검사 1개 무료', '아래 추가 검사 중 하나를 고르면 1개 가격이 빠져요', true) + incRow('크몽 메시지 Q&A', `리포트 받은 뒤 ${prem ? 14 : 7}일 동안 질문할 수 있어요`, true) + incRow('공부·학원 로드맵', '학원·과외 고르는 기준, 수업 방식, 문제집·과제 분량', true) + (prem ? incRow('진로 옵션 1개 포함', '아래 진로 옵션 중 하나를 고르면 1개 가격이 빠져요', true) + incRow('심층 고민 3개 답변', '사전 설문에 적어 주신 고민을 따로 정리해 드려요', true) : '') : '') +
     avail.map(k => `<label class="ci"><input type="checkbox" data-k="${k}" ${calc.picks.has(k) ? 'checked' : ''}><div class="ci-main"><b>${T[k].name}</b><small>${T[k].kind === 'career' ? '진로 옵션' : '추가 검사'}${T[k].personalOnly || T[k].parentOnly ? ' · 보호자 구매 전용' : ''}</small></div><span class="ci-price">+${won(T[k].price)}</span></label>`).join('');
   sumCalc();
 }
@@ -140,9 +142,10 @@ function sumCalc() {
   const addPrices = [...calc.picks].filter(k => T[k].kind === 'add').map(k => T[k].price);
   const carPrices = [...calc.picks].filter(k => T[k].kind === 'career').map(k => T[k].price);
   let free = 0;
-  if (calc.pkg === 'deep' && addPrices.length) free = Math.max(...addPrices);
+  if ((calc.pkg === 'deep' || calc.pkg === 'premium') && addPrices.length) free = Math.max(...addPrices);
+  if (calc.pkg === 'premium' && carPrices.length) free += Math.max(...carPrices);
   const extra = addPrices.reduce((a, b) => a + b, 0) + carPrices.reduce((a, b) => a + b, 0) - free;
-  $('#calcBreak').innerHTML = `${PKG(calc.pkg).name} <b>${won(base)}</b> + 추가 <b>${won(extra)}</b>${free ? ` <small>(추가 검사 1개 무료 적용)</small>` : ''}`;
+  $('#calcBreak').innerHTML = `${PKG(calc.pkg).name} <b>${won(base)}</b> + 추가 <b>${won(extra)}</b>${free ? ` <small>(무료 항목 적용)</small>` : ''}`;
   $('#calcSum').textContent = won(base + extra);
   calc.total = base + extra;
 }

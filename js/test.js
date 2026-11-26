@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!t) { el.innerHTML = '<h1 class="page-title">검사를 찾을 수 없어요</h1><a class="btn" href="tests.html">검사 목록으로</a>'; return; }
   document.title = `${t.name} | 똑심마인드 키즈`;
   const kindText = {
-    core: () => k === 'sts' ? `온라인 기본 패키지에 포함 (${won(C.packages.basic.price)})` : `온라인 심화 패키지에 포함 (${won(C.packages.deep.price)})`,
+    core: () => k === 'sts' ? `온라인 기본 패키지에 포함 (${won(C.packages.basic.price)})` : `온라인 심화·프리미엄 패키지에 포함 (${won(C.packages.deep.price)}~)`,
     grade: () => `${t.grades.map(gname).join(' · ')} 패키지에 포함`,
     add: () => `추가 검사 +${won(t.price)}`,
-    career: () => `진로 옵션 +${won(t.price)}`,
+    career: () => `진로 옵션 +${won(t.price)} · 프리미엄 패키지는 1개 포함`,
     free: () => '후기 작성 시 무료',
   };
   const where = kindText[t.kind]() + (k === 'pat' ? ' · 초등 1~2학년은 패키지에 포함' : '');

@@ -347,3 +347,10 @@ details p { margin: 10px 0 0; color: var(--sub); }
 .opt { font-size: .78rem; color: var(--sub); font-weight: 400; }
 .rprice small { display: block; font-size: .8rem; color: var(--sub); }
 .qcard .ci-price { font-size: .92rem; }
+
+/* 3단 패키지, 결과지 분석 */
+.ana-band { background: var(--mint-soft); }
+.ana-band h2 { font-size: 1.9rem; margin: 0 0 4px; }
+.ana-band p { margin: 0; }
+.ana-head { background: radial-gradient(circle at 85% 20%, var(--sun-soft) 0, transparent 45%); }
+.plan h3 { font-size: 1.35rem; }

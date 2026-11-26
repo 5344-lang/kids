@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20261127e">
+<link rel="stylesheet" href="css/style.css?v=20261127f">
 </head>
 <body>
 
@@ -22,6 +22,7 @@
       <a href="#group">단체 구매</a>
       <a href="tests.html">검사 소개</a>
       <a href="quiz.html">맞춤 추천</a>
+      <a href="analysis.html">결과지 분석</a>
       <a href="#faq">자주 묻는 질문</a>
     </nav>
     <a class="btn btn-sm js-contact" href="#">신청하기</a>
@@ -78,7 +79,7 @@
       <li><span class="n">2</span><b>검사 확정</b><p>설문을 보고 학년과 고민에 맞는 검사를 정해 안내드립니다.</p></li>
       <li><span class="n">3</span><b>온라인 검사</b><p>검사 링크를 보내 드립니다. 집에서 휴대폰이나 PC로 하시면 됩니다.</p></li>
       <li><span class="n">4</span><b>종합해석지</b><p>검사 완료 후 2~3일 안에 결과지 원본과 종합해석지를 PDF로 보내 드립니다.</p></li>
-      <li><span class="n">5</span><b>전화 해석</b><p>심화 패키지는 20분 전화로 결과를 직접 설명해 드립니다.</p></li>
+      <li><span class="n">5</span><b>메시지 Q&amp;A</b><p>심화·프리미엄은 리포트를 받은 뒤 크몽 메시지로 궁금한 점을 물어보실 수 있어요.</p></li>
     </ol>
   </div>
 </section>
@@ -87,7 +88,7 @@
 <section id="price" class="price">
   <div class="wrap">
     <h2 class="sec-title">패키지</h2>
-    <div class="plans plans-2" id="plans"></div>
+    <div class="plans" id="plans"></div>
 
     <div class="gtable-wrap">
       <h3 class="sub-title">학년별로 들어가는 검사</h3>
@@ -102,11 +103,11 @@
 <section id="addon" class="addon">
   <div class="wrap">
     <h2 class="sec-title">추가 검사</h2>
-    <p class="sec-sub">패키지에 원하는 검사를 더할 수 있어요. 적힌 가격만큼 더해집니다. 심화 패키지는 이 중 1개를 무료로 고를 수 있어요.</p>
+    <p class="sec-sub">패키지에 원하는 검사를 더할 수 있어요. 적힌 가격만큼 더해집니다. 심화·프리미엄 패키지는 이 중 1개를 무료로 고를 수 있어요.</p>
     <div class="addon-list" id="addonList"></div>
 
     <h2 class="sec-title career-title">진로 옵션</h2>
-    <p class="sec-sub">진로가 궁금하다면 진로 검사를 더하세요. 해석지에 학습 결과와 엮은 "진로 방향" 1쪽이 붙습니다.</p>
+    <p class="sec-sub">진로가 궁금하다면 진로 검사를 더하세요. 해석지에 학습 결과와 엮은 "진로 방향" 1쪽이 붙습니다. 프리미엄 패키지는 1개가 포함돼요.</p>
     <div class="addon-list" id="careerList"></div>
 
     <div class="calc" id="calc">
@@ -159,6 +160,17 @@
   </div>
 </section>
 
+<!-- ANALYSIS BAND -->
+<section class="ana-band">
+  <div class="wrap quiz-cta-in">
+    <div>
+      <h2>이미 받은 검사 결과지가 있다면</h2>
+      <p>학교·센터·학원에서 받은 웩슬러, TCI, MLST 결과지를 쉬운 말과 공부 방법으로 풀어 드려요. 29,000원부터.</p>
+    </div>
+    <a class="btn btn-big" href="analysis.html">결과지 분석 보기</a>
+  </div>
+</section>
+
 <!-- TESTS -->
 <section id="tests" class="tests-sec">
   <div class="wrap">
@@ -178,6 +190,7 @@
         <li><b>검사별 결과</b> 점수와 함께 "그래서 무슨 뜻인지"를 쉬운 말로 풀어 드립니다.</li>
         <li><b>종합 해석</b> 아이가 잘 배우는 방식과 공부가 어려워지는 장면을 정리합니다.</li>
         <li><b>4주 학습 가이드</b> 설명 방식, 과제 분량, 집에서 할 활동을 주 단위로 제안합니다.</li>
+        <li><b>공부·학원 로드맵 (심화부터)</b> 학원과 과외 중 무엇이 맞는지, 어떤 수업 방식이 맞는지, 문제집과 과제 분량을 정리합니다.</li>
         <li><b>지도 포인트</b> 선생님·학원 구매 시 수업에서 바로 쓸 지도 방법을 덧붙입니다.</li>
       </ol>
       <p class="small-note">출판사 결과지 원본도 함께 보내 드립니다.</p>
@@ -230,10 +243,11 @@
     <h2 class="sec-title">자주 묻는 질문</h2>
     <details><summary>몇 살부터 받을 수 있나요?</summary><p>만 5세(입학 전)부터 고등학생까지 가능합니다. 학년에 따라 쓰는 검사가 달라집니다.</p></details>
     <details><summary>아이가 검사를 싫어하면 어떡하죠?</summary><p>저학년은 보호자 응답형 검사가 중심이라 아이가 직접 풀 문항이 많지 않습니다. 고학년 검사도 대부분 20~40분이면 끝나요.</p></details>
-    <details><summary>기본과 심화는 뭐가 다른가요?</summary><p>기본은 짧은 기질검사(STS)로 시작하고, 심화는 기질과 성격을 함께 보는 JTCI 상세보고서에 추가 검사 1개와 20분 전화 해석이 더해집니다.</p></details>
+    <details><summary>기본·심화·프리미엄은 뭐가 다른가요?</summary><p>기본은 짧은 기질검사(STS)와 학습 검사로 공부 성향 리포트를 드려요. 심화는 기질과 성격을 함께 보는 JTCI와 추가 검사 1개로 공부·학원 로드맵까지 드리고, 메시지로 질문하실 수 있어요. 프리미엄은 여기에 진로 검사 1개와 심층 고민 3개 답변이 더해집니다.</p></details>
     <details><summary>결과는 언제 받나요?</summary><p>모든 검사가 끝난 뒤 2~3일 안에 결과지 원본과 종합해석지를 PDF로 보내 드립니다.</p></details>
     <details><summary>SCT는 정말 무료인가요?</summary><p>네. 후기 작성을 약속해 주시면 3학년 이상 아이에게 SCT 문장완성검사를 무료로 함께 해 드립니다.</p></details>
-    <details><summary>방문 상담도 되나요?</summary><p>현재는 온라인으로만 진행합니다. 심화 패키지의 20분 전화 해석으로 궁금한 점을 직접 물어보실 수 있어요.</p></details>
+    <details><summary>통화 상담도 되나요?</summary><p>온라인으로만 진행하고, 상담은 크몽 메시지 Q&amp;A로 드려요. 시간 맞추실 필요 없이 편할 때 물어보시면 됩니다.</p></details>
+    <details><summary>이미 받은 검사 결과지만 해석받을 수 있나요?</summary><p>네. 학교·센터·학원에서 받은 결과지는 <a href="analysis.html">결과지 분석</a> 상품으로 해석해 드려요.</p></details>
   </div>
 </section>
 
@@ -258,7 +272,7 @@
   </div>
 </footer>
 
-<script src="js/config.js?v=20261127e"></script>
-<script src="js/main.js?v=20261127e"></script>
+<script src="js/config.js?v=20261127f"></script>
+<script src="js/main.js?v=20261127f"></script>
 </body>
 </html>
