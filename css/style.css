@@ -371,3 +371,27 @@ details p { margin: 10px 0 0; color: var(--sub); }
 .qcard .calc-list { gap: 8px; margin-bottom: 8px; }
 .hero { padding: 48px 0 56px; }
 @media (max-width: 560px) { .reco-title { font-size: 1.5rem; } }
+
+/* ---------- 모바일 메뉴 · 추가 검사 접기 (2026-11 재배치) ---------- */
+.nav-burger { display: none; width: 44px; height: 44px; border: 0; background: transparent; cursor: pointer; padding: 0; border-radius: 12px; flex-direction: column; justify-content: center; align-items: center; gap: 5px; }
+.nav-burger span { display: block; width: 22px; height: 2.5px; background: var(--ink); border-radius: 2px; transition: transform .2s, opacity .2s; }
+.nav-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.nav-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+.nav-menu { position: fixed; top: 64px; left: 0; right: 0; z-index: 9; background: #fffdf6; border-bottom: 1px solid var(--line); box-shadow: 0 12px 24px rgba(30,42,68,.12); padding: 8px 0 18px; max-height: calc(100vh - 64px); overflow-y: auto; }
+.nav-menu[hidden] { display: none; }
+.nav-menu a { display: block; padding: 14px 4px; font-size: 1.08rem; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); min-height: 48px; }
+.nav-menu a.nav-menu-cta { margin-top: 14px; text-align: center; border: 2px solid var(--ink); color: #fff; padding: 14px 24px; }
+@media (min-width: 901px) { .nav-menu { display: none !important; } }
+@media (max-width: 900px) { .nav-burger { display: inline-flex; } }
+@media (max-width: 560px) { .nav-cta .js-contact { display: none; } }
+
+.addon-fold { max-width: 980px; margin: 0 auto; background: #fffdf6; border: 2px solid var(--line); border-radius: 22px; padding: 6px 22px; }
+.addon-fold > summary { list-style: none; cursor: pointer; display: flex; flex-direction: column; gap: 2px; padding: 16px 28px 16px 0; position: relative; min-height: 56px; }
+.addon-fold > summary::-webkit-details-marker { display: none; }
+.addon-fold > summary b { font-family: 'Jua','Noto Sans KR',sans-serif; font-weight: 400; font-size: 1.35rem; }
+.addon-fold > summary span { color: var(--sub); font-size: .95rem; }
+.addon-fold > summary::after { content: '＋ 펼치기'; position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: var(--coral); font-weight: 700; font-size: .95rem; }
+.addon-fold[open] > summary::after { content: '－ 접기'; }
+.addon-fold[open] { padding-bottom: 28px; }
+@media (max-width: 560px) { .addon-fold { padding: 4px 16px; } .addon-fold > summary::after { content: '＋'; font-size: 1.4rem; } .addon-fold[open] > summary::after { content: '－'; } }

@@ -2,6 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>검사 상세 | 똑심마인드 키즈</title>
 <meta name="description" content="검사 대상, 소요 시간, 보는 것, 샘플 결과지">
@@ -25,9 +27,22 @@
     <div class="nav-cta">
       <a class="btn btn-sm btn-quiz" href="quiz.html">맞춤 추천</a>
       <a class="btn btn-sm js-contact" href="#">신청하기</a>
+      <button class="nav-burger" id="navBurger" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="navMenu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
+<div class="nav-menu" id="navMenu" hidden>
+  <div class="wrap">
+    <a href="index.html#price">패키지</a>
+    <a href="tests.html">검사 소개</a>
+    <a href="analysis.html">결과지 분석</a>
+    <a href="index.html#group">학원·선생님용</a>
+    <a href="quiz.html">1분 맞춤 추천</a>
+    <a class="js-main" href="#">똑심마인드 (아이 기질·부모 양육태도)</a>
+    <a class="btn js-contact nav-menu-cta" href="#">크몽에서 신청하기</a>
+  </div>
+</div>
+
 
 <main id="top">
 <section class="page-head"><div class="wrap" id="testDetail"></div></section>
@@ -36,7 +51,7 @@
 <footer class="foot">
   <div class="wrap">
     <p><b>똑심마인드 키즈</b> · 운영 김윤서</p>
-    <p>성인 심리검사는 <a class="js-main" href="#">똑심마인드</a>에서 만나실 수 있습니다.</p>
+    <p>성인 심리검사, 아이 기질과 부모 양육태도 이해는 <a class="js-main" href="#">똑심마인드</a>에서 만나실 수 있습니다.</p>
     <p class="foot-small">본 서비스는 교육적 학습 코칭이며 의학적·임상적 진단이 아닙니다.</p>
   </div>
 </footer>

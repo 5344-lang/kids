@@ -1,7 +1,7 @@
 /* 검사 상세 */
 document.addEventListener('DOMContentLoaded', () => {
   const k = new URLSearchParams(location.search).get('t');
-  const t = T[k];
+  const t = (k && Object.prototype.hasOwnProperty.call(T, k)) ? T[k] : null;
   const el = document.getElementById('testDetail');
   if (!t) { el.innerHTML = '<h1 class="page-title">검사를 찾을 수 없어요</h1><a class="btn" href="tests.html">검사 목록으로</a>'; return; }
   document.title = `${t.name} | 똑심마인드 키즈`;
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ${t.note ? `<div class="notice ${k === 'blct' || k === 'kbasc' ? 'warn' : ''}">${t.note}</div>` : ''}
     <div class="sample-box">
       <h3>샘플 결과지</h3>
-      ${t.samples.length ? `<div class="sample-btns">${t.samples.map(([n, u]) => `<a class="btn btn-line" href="${u}" target="_blank" rel="noopener">${n} ↗</a>`).join('')}</div>
+      ${t.samples.length ? `<div class="sample-btns">${t.samples.map(([n, u]) => `<a class="btn btn-line" href="${u}" target="_blank" rel="noopener noreferrer">${n} ↗</a>`).join('')}</div>
       <p class="small-note">출판사 결과지 샘플입니다. 실제로는 이 결과지와 함께 쉬운 말로 풀어 쓴 종합해석지를 보내 드려요.</p>`
       : `<p class="small-note">SCT는 정해진 결과지 없이, 아이가 쓴 문장을 주제별로 묶어 종합해석지 안에 정리해 드립니다.</p>`}
     </div>

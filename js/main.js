@@ -49,7 +49,7 @@ async function applyWith(summary) {
     <pre class="modal-text">${summary.replace(/</g, '&lt;')}</pre>
     ${ok ? '<p class="small-note">붙여넣기가 안 되면 이 화면을 캡처해서 보내 주셔도 돼요.</p>' : ''}
     <div class="hero-cta">
-      <a class="btn btn-big" href="${C.contactUrl}" target="_blank" rel="noopener">크몽에서 신청하기</a>
+      <a class="btn btn-big" href="${C.contactUrl}" target="_blank" rel="noopener noreferrer">크몽에서 신청하기</a>
       <button class="btn btn-line" data-close>닫기</button>
     </div></div>`;
   m.classList.add('on');
@@ -58,9 +58,28 @@ async function applyWith(summary) {
 
 /* 공통 링크 */
 function wireLinks() {
-  $$('.js-contact').forEach(a => { a.href = C.contactUrl; a.target = '_blank'; a.rel = 'noopener'; });
-  $$('.js-survey').forEach(a => { a.href = C.surveyUrl || C.contactUrl; a.target = '_blank'; a.rel = 'noopener'; });
-  $$('.js-main').forEach(a => { a.href = C.mainSite; a.target = '_blank'; a.rel = 'noopener'; });
+  $$('.js-contact').forEach(a => { a.href = C.contactUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; });
+  $$('.js-survey').forEach(a => { a.href = C.surveyUrl || C.contactUrl; a.target = '_blank'; a.rel = 'noopener noreferrer'; });
+  $$('.js-main').forEach(a => { a.href = C.mainSite; a.target = '_blank'; a.rel = 'noopener noreferrer'; });
+}
+
+/* 모바일 메뉴 */
+function initNavMenu() {
+  const b = document.getElementById('navBurger'), m = document.getElementById('navMenu');
+  if (!b || !m) return;
+  const set = open => { m.hidden = !open; b.setAttribute('aria-expanded', open); b.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기'); };
+  b.addEventListener('click', () => set(m.hidden));
+  m.addEventListener('click', e => { if (e.target.closest('a')) set(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
+  window.addEventListener('resize', () => { if (window.innerWidth > 900) set(false); });
+}
+
+/* 접힌 '추가 검사' 구간은 앵커로 들어오면 자동으로 펼친다 */
+function openAddonOnHash() {
+  const f = document.getElementById('addonFold'); if (!f) return;
+  const open = () => { if (['#addon', '#calc'].includes(location.hash)) f.open = true; };
+  open(); window.addEventListener('hashchange', open);
+  document.querySelectorAll('a[href="#addon"], a[href="#calc"]').forEach(a => a.addEventListener('click', () => { f.open = true; }));
 }
 
 /* ---------- 메인 페이지 ---------- */
@@ -214,4 +233,6 @@ function initMain() {
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof PAGE === 'undefined') initMain();
   wireLinks();
+  initNavMenu();
+  openAddonOnHash();
 });
