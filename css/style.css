@@ -354,3 +354,11 @@ details p { margin: 10px 0 0; color: var(--sub); }
 .ana-band p { margin: 0; }
 .ana-head { background: radial-gradient(circle at 85% 20%, var(--sun-soft) 0, transparent 45%); }
 .plan h3 { font-size: 1.35rem; }
+
+/* 상단 메뉴 단순화 */
+.nav-links { gap: 28px; font-size: 1rem; }
+.nav-links a { color: var(--ink); font-weight: 500; }
+.nav-links a:hover { color: var(--coral); }
+.nav-cta { display: flex; gap: 8px; }
+.btn-quiz { background: var(--coral); border-color: var(--coral); }
+@media (max-width: 560px) { .nav-cta .btn-sm { padding: 6px 12px; font-size: .92rem; } .logo { font-size: 1.15rem; } }
