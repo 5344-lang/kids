@@ -195,6 +195,12 @@ function wireCalc() {
   });
 }
 
+function renderTestChips(el) {
+  if (!el) return;
+  const order = ['sts', 'jtci', 'esra', 'pat', 'amt', 'mlst', 'rs', 'kbasc', 'blct', 'kicsl', 'holland', 'sct'];
+  el.innerHTML = order.map(k => `<a class="tchip" href="test.html?t=${k}">${T[k].short}</a>`).join('');
+}
+
 function renderTestCards(el) {
   if (!el) return;
   const order = ['sts', 'jtci', 'esra', 'pat', 'amt', 'mlst', 'rs', 'kbasc', 'blct', 'kicsl', 'holland', 'sct'];
@@ -228,6 +234,7 @@ function initMain() {
   $$('[data-group-min]').forEach(e => e.textContent = C.group.min);
   $$('[data-group-quote]').forEach(e => e.textContent = C.group.quoteFrom);
   renderTestCards($('#testCards'));
+  renderTestChips($('#testChips'));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
