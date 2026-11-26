@@ -125,8 +125,13 @@ function renderCalc() {
   const avail = [...addOns(calc.g, { group: calc.pkg === 'teacher' }), ...careers(calc.g)];
   [...calc.picks].forEach(k => { if (!avail.includes(k)) calc.picks.delete(k); });
   const core = coreTests(calc.g, calc.pkg);
+  const incRow = (name, sub, deepTag) => `<div class="ci inc${deepTag ? ' deep' : ''}"><span>✓</span><div class="ci-main"><b>${name}</b><small>${sub}</small></div><span class="ci-price">${deepTag ? '심화 포함' : '포함'}</span></div>`;
+  const deep = calc.pkg === 'deep';
+  const sctOk = T.sct.grades.includes(calc.g);
   $('#calcList').innerHTML =
-    core.map(k => `<div class="ci inc"><span>✓</span><div class="ci-main"><b>${T[k].name}</b><small>패키지 포함${k === 'sct' ? ' · 후기 작성 시 무료' : ''}</small></div><span class="ci-price">포함</span></div>`).join('') +
+    core.filter(k => k !== 'sct').map(k => incRow(T[k].name + (k === 'jtci' ? ' + 상세 해석보고서' : ''), k === 'jtci' ? 'STS 대신 기질과 성격을 함께 보는 검사' : '패키지 포함', k === 'jtci')).join('') +
+    (calc.pkg !== 'teacher' ? (sctOk ? incRow('SCT 문장완성검사', '후기 작성 시 무료 · 아이 속마음을 아이 말로 확인', deep) : `<div class="ci inc off"><span>–</span><div class="ci-main"><b>SCT 문장완성검사</b><small>글을 직접 써야 해서 3학년부터 가능해요</small></div><span class="ci-price">해당 없음</span></div>`) : '') +
+    (deep ? incRow('추가 검사 1개 무료', '아래 추가 검사 중 하나를 고르면 1개 가격이 빠져요', true) + incRow('전화 해석 상담 20분', '결과를 직접 설명해 드려요', true) : '') +
     avail.map(k => `<label class="ci"><input type="checkbox" data-k="${k}" ${calc.picks.has(k) ? 'checked' : ''}><div class="ci-main"><b>${T[k].name}</b><small>${T[k].kind === 'career' ? '진로 옵션' : '추가 검사'}${T[k].personalOnly || T[k].parentOnly ? ' · 보호자 구매 전용' : ''}</small></div><span class="ci-price">+${won(T[k].price)}</span></label>`).join('');
   sumCalc();
 }

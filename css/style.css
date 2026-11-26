@@ -328,3 +328,7 @@ details p { margin: 10px 0 0; color: var(--sub); }
 .plan-tag.light { color: #fff; opacity: .75; }
 .group-card .group-rate { margin-top: 8px; font-size: 1.8rem; }
 .group-card .btn { margin-top: 16px; }
+
+.ci.inc.deep { background: #FFE5DC; }
+.ci.inc.deep .ci-price { color: var(--coral); }
+.ci.inc.off { background: var(--paper); opacity: .7; }
