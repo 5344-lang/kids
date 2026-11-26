@@ -323,3 +323,8 @@ details p { margin: 10px 0 0; color: var(--sub); }
 .modal-steps { padding-left: 1.2em; margin: 0 0 12px; display: grid; gap: 4px; }
 .modal-text { background: var(--paper); border: 1px dashed var(--line); border-radius: 12px; padding: 12px 14px; font-family: 'Noto Sans KR', sans-serif; font-size: .88rem; white-space: pre-wrap; margin: 0 0 8px; }
 .calc-apply { justify-content: flex-end; margin-top: 14px; }
+
+.group-h { font-size: 1.6rem; margin: 4px 0 0; } .group-h span { color: var(--sun); } .group-h small { font-family: 'Noto Sans KR', sans-serif; font-size: .85rem; opacity: .8; }
+.plan-tag.light { color: #fff; opacity: .75; }
+.group-card .group-rate { margin-top: 8px; font-size: 1.8rem; }
+.group-card .btn { margin-top: 16px; }

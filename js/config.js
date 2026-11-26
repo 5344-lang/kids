@@ -33,10 +33,17 @@ const KIDS_CONFIG = {
     },
   },
 
+  // 학원·공부방·과외 선생님용 (학업만)
+  teacherPkg: {
+    name: '선생님용 학습 점검', price: 25000,
+    tag: '학원·공부방·과외 선생님',
+    items: ['학년별 학습 검사 1개', '학생별 해석지 (핵심 2쪽)', '수업에서 바로 쓰는 지도 포인트', '반 전체 요약표 (5명 이상)'],
+  },
+
   // 학년별로 패키지에 들어가는 학습 검사
   gradeTest: { pre: 'esra', low: 'pat', mid: 'amt', high: 'mlst', ms: 'mlst', hs: 'mlst' },
-  // 학원·선생님 구매 시 바꿔 넣는 학습 검사 (보호자용 검사 대신)
-  teacherGradeTest: { low: 'rs' },
+  // 학원·선생님용: 학업 검사만 (기질·정서 검사 없음)
+  teacherGradeTest: { pre: 'esra', low: 'amt', mid: 'amt', high: 'mlst', ms: 'mlst', hs: 'mlst' },
 
   // 단체 구매 (학원·공부방·과외 선생님)
   group: { min: 5, rate: 10, quoteFrom: 20 },
@@ -94,13 +101,13 @@ const KIDS_CONFIG = {
     amt: {
       name: 'AMT 학업동기검사', short: 'AMT', kind: 'grade', price: 9000,
       en: 'Academic Motivation Test',
-      grades: ['mid'],
-      target: '초등학생~', who: '학생 본인', time: '약 10~20분 · 44문항',
+      grades: ['low','mid'],
+      target: '초등학생~', who: '학생 본인 (저학년은 읽어 줘도 됩니다)', time: '약 10~20분 · 44문항',
       what: ['학업적 자기효능감: 자신감, 자기조절 효능감, 과제 수준 선호', '학업적 실패내성: 감정, 행동, 과제 난이도 선호'],
       desc: '공부에 대한 자신감과, 틀리거나 실패했을 때 다시 해 보려는 힘을 봅니다. 학습전략검사(MLST-II)를 받기 전인 3학년에게 맞는 검사예요.',
       forWho: ['"난 못해"라는 말을 자주 할 때', '어려운 문제를 만나면 금방 포기할 때'],
       samples: [['결과지 샘플', S+'resultSample/AMT_CO_SG.pdf']],
-      note: '초등 3학년의 패키지 학습 검사입니다. 4학년부터는 같은 내용을 MLST-II가 더 자세히 다룹니다.',
+      note: '보호자 구매는 초등 3학년, 선생님용은 초등 1~3학년의 학습 검사입니다. 4학년부터는 같은 내용을 MLST-II가 더 자세히 다룹니다.',
     },
     mlst: {
       name: 'MLST-II 학습전략검사', short: 'MLST-II', kind: 'grade', price: 14000,
@@ -136,7 +143,7 @@ const KIDS_CONFIG = {
       note: '보호자 구매에서만 고를 수 있어요. 학원·선생님 구매에는 포함되지 않습니다.',
     },
     blct: {
-      name: 'BLCT 기초학습역량검사', short: 'BLCT', kind: 'add', price: 14000,
+      name: 'BLCT 기초학습역량검사', short: 'BLCT', kind: 'add', price: 14000, academic: true,
       en: 'Basic Learning Competence Test',
       grades: ['high','ms','hs'],
       target: '초등 4~6학년 · 중·고등학생', who: '학생 본인 (직접 문제를 푸는 검사)', time: '약 40분 · 초등용 118문항 / 청소년용 142문항',

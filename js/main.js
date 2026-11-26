@@ -8,16 +8,17 @@ const GKEYS = Object.keys(C.grades);
 const gname = g => C.grades[g].label;
 
 /* 이 학년의 패키지 기본 검사 */
-function gradeTestFor(g, teacher) { return teacher && C.teacherGradeTest[g] ? C.teacherGradeTest[g] : C.gradeTest[g]; }
-function coreTests(g, pkg, teacher) {
-  const list = [pkg === 'deep' ? 'jtci' : 'sts', gradeTestFor(g, teacher)];
+const PKG = k => k === 'teacher' ? C.teacherPkg : C.packages[k];
+function coreTests(g, pkg) {
+  if (pkg === 'teacher') return [C.teacherGradeTest[g]];
+  const list = [pkg === 'deep' ? 'jtci' : 'sts', C.gradeTest[g]];
   if (T.sct.grades.includes(g)) list.push('sct');
   return list;
 }
 /* 이 학년에서 고를 수 있는 추가 검사 / 진로 옵션 */
 function addOns(g, opts = {}) {
-  const core = [gradeTestFor(g, opts.group)];
-  return Object.keys(T).filter(k => T[k].kind === 'add' && T[k].grades.includes(g) && !core.includes(k) && !(opts.group && (T[k].personalOnly || T[k].parentOnly)));
+  const core = [opts.group ? C.teacherGradeTest[g] : C.gradeTest[g]];
+  return Object.keys(T).filter(k => T[k].kind === 'add' && T[k].grades.includes(g) && !core.includes(k) && (!opts.group || T[k].academic));
 }
 function careers(g) { return Object.keys(T).filter(k => T[k].kind === 'career' && T[k].grades.includes(g)); }
 function gradeRange(k) {
@@ -120,8 +121,8 @@ const calc = { g: 'high', pkg: 'basic', picks: new Set() };
 function renderCalc() {
   const gEl = $('#calcGrades'); if (!gEl) return;
   gEl.innerHTML = GKEYS.map(g => `<button class="cg ${g === calc.g ? 'on' : ''}" data-g="${g}">${gname(g)}</button>`).join('');
-  $('#calcPkgs').innerHTML = ['basic', 'deep'].map(p => `<button class="cg ${p === calc.pkg ? 'on' : ''}" data-p="${p}">${C.packages[p].name}</button>`).join('');
-  const avail = [...addOns(calc.g), ...careers(calc.g)];
+  $('#calcPkgs').innerHTML = ['basic', 'deep', 'teacher'].map(p => `<button class="cg ${p === calc.pkg ? 'on' : ''}" data-p="${p}">${PKG(p).name}</button>`).join('');
+  const avail = [...addOns(calc.g, { group: calc.pkg === 'teacher' }), ...careers(calc.g)];
   [...calc.picks].forEach(k => { if (!avail.includes(k)) calc.picks.delete(k); });
   const core = coreTests(calc.g, calc.pkg);
   $('#calcList').innerHTML =
@@ -130,13 +131,13 @@ function renderCalc() {
   sumCalc();
 }
 function sumCalc() {
-  const base = C.packages[calc.pkg].price;
+  const base = PKG(calc.pkg).price;
   const addPrices = [...calc.picks].filter(k => T[k].kind === 'add').map(k => T[k].price);
   const carPrices = [...calc.picks].filter(k => T[k].kind === 'career').map(k => T[k].price);
   let free = 0;
   if (calc.pkg === 'deep' && addPrices.length) free = Math.max(...addPrices);
   const extra = addPrices.reduce((a, b) => a + b, 0) + carPrices.reduce((a, b) => a + b, 0) - free;
-  $('#calcBreak').innerHTML = `${C.packages[calc.pkg].name} <b>${won(base)}</b> + 추가 <b>${won(extra)}</b>${free ? ` <small>(추가 검사 1개 무료 적용)</small>` : ''}`;
+  $('#calcBreak').innerHTML = `${PKG(calc.pkg).name} <b>${won(base)}</b> + 추가 <b>${won(extra)}</b>${free ? ` <small>(추가 검사 1개 무료 적용)</small>` : ''}`;
   $('#calcSum').textContent = won(base + extra);
   calc.total = base + extra;
 }
@@ -145,10 +146,11 @@ function calcSummary() {
   const picks = [...calc.picks];
   return ['[똑심마인드 키즈 신청]',
     `학년: ${gname(calc.g)}`,
-    `패키지: ${C.packages[calc.pkg].name} (${won(C.packages[calc.pkg].price)})`,
+    `패키지: ${PKG(calc.pkg).name} (${won(PKG(calc.pkg).price)})`,
     `포함 검사: ${core.map(k => k === 'sct' ? 'SCT(후기 작성 시 무료)' : T[k].short).join(', ')}`,
     `추가 선택: ${picks.length ? picks.map(k => T[k].short).join(', ') : '없음'}`,
-    `예상 금액: ${won(calc.total)}`].join('\n');
+    `예상 금액: ${won(calc.total)}${calc.pkg === 'teacher' ? ' (1명)' : ''}`,
+    calc.pkg === 'teacher' ? '인원: (적어 주세요)명' : ''].filter(Boolean).join('\n');
 }
 function wireCalc() {
   const box = $('#calc'); if (!box) return;
@@ -193,6 +195,8 @@ function initMain() {
   }
   renderAddons();
   renderCalc(); wireCalc();
+  $$('[data-tpkg-price]').forEach(e => e.textContent = won(C.teacherPkg.price));
+  const tl = $('#tpkgItems'); if (tl) tl.innerHTML = C.teacherPkg.items.map(i => `<li>${i}</li>`).join('');
   $$('[data-group-rate]').forEach(e => e.textContent = C.group.rate + '%');
   $$('[data-group-min]').forEach(e => e.textContent = C.group.min);
   $$('[data-group-quote]').forEach(e => e.textContent = C.group.quoteFrom);
