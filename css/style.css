@@ -336,3 +336,14 @@ details p { margin: 10px 0 0; color: var(--sub); }
 /* 나란한 버튼 크기 통일 (신청하기와 같은 크기) */
 .hero-cta .btn, .sample-btns .btn { padding: 16px 34px; font-size: 1.3rem; min-height: 62px; }
 @media (max-width: 560px) { .hero-cta .btn, .sample-btns .btn { padding: 14px 22px; font-size: 1.15rem; min-height: 56px; } }
+
+/* 추천 결과: 선택형 */
+.pkg-toggle { display: flex; gap: 8px; flex-wrap: wrap; margin: -8px 0 8px; }
+.rbox .calc-list { gap: 8px; }
+.rbox .ci { grid-template-columns: auto 1fr auto; padding: 10px 14px; }
+.rbox .ci.rec { border-color: var(--coral); }
+.rbox .ci em { font-style: normal; font-size: .72rem; font-weight: 700; color: #fff; background: var(--coral); border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: middle; }
+.rbox .ci small { display: block; }
+.opt { font-size: .78rem; color: var(--sub); font-weight: 400; }
+.rprice small { display: block; font-size: .8rem; color: var(--sub); }
+.qcard .ci-price { font-size: .92rem; }
