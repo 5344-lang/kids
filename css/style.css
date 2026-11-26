@@ -310,3 +310,7 @@ details p { margin: 10px 0 0; color: var(--sub); }
   .quiz-cta h2 { font-size: 1.5rem; }
 }
 .worry small { display: block; color: var(--sub); font-size: .85rem; margin-top: 4px; }
+
+/* 버튼 글자 가운데 정렬 */
+.btn { display: inline-flex; align-items: center; justify-content: center; line-height: 1.2; font-family: 'Jua', 'Noto Sans KR', sans-serif; cursor: pointer; }
+.hero-cta { align-items: center; }
