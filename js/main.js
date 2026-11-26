@@ -24,6 +24,36 @@ function gradeRange(k) {
   return gs.map(gname).join(' · ');
 }
 
+
+/* 고른 구성을 복사하고 크몽 채팅 안내 */
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; } catch (e) {}
+  try {
+    const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok;
+  } catch (e) { return false; }
+}
+async function applyWith(summary) {
+  const ok = await copyText(summary);
+  let m = document.getElementById('applyModal');
+  if (!m) { m = document.createElement('div'); m.id = 'applyModal'; m.className = 'modal'; document.body.appendChild(m); }
+  m.innerHTML = `<div class="modal-box" role="dialog" aria-modal="true">
+    <h3>${ok ? '✅ 고른 구성이 복사됐어요' : '📸 이 화면을 캡처해 주세요'}</h3>
+    <ol class="modal-steps">
+      <li>아래 <b>크몽에서 신청하기</b>를 눌러 주세요.</li>
+      <li>크몽 <b>문의하기(채팅)</b>를 열고 ${ok ? '<b>붙여넣기</b> 해 주세요.' : '캡처한 화면을 보내 주세요.'}</li>
+      <li>확인 후 결제 안내와 사전 설문 링크를 보내 드려요.</li>
+    </ol>
+    <pre class="modal-text">${summary.replace(/</g, '&lt;')}</pre>
+    ${ok ? '<p class="small-note">붙여넣기가 안 되면 이 화면을 캡처해서 보내 주셔도 돼요.</p>' : ''}
+    <div class="hero-cta">
+      <a class="btn btn-big" href="${C.contactUrl}" target="_blank" rel="noopener">크몽에서 신청하기</a>
+      <button class="btn btn-line" data-close>닫기</button>
+    </div></div>`;
+  m.classList.add('on');
+  m.onclick = e => { if (e.target === m || e.target.hasAttribute('data-close')) m.classList.remove('on'); };
+}
+
 /* 공통 링크 */
 function wireLinks() {
   $$('.js-contact').forEach(a => { a.href = C.contactUrl; a.target = '_blank'; a.rel = 'noopener'; });
@@ -107,10 +137,22 @@ function sumCalc() {
   const extra = addPrices.reduce((a, b) => a + b, 0) + carPrices.reduce((a, b) => a + b, 0) - free;
   $('#calcBreak').innerHTML = `${C.packages[calc.pkg].name} <b>${won(base)}</b> + 추가 <b>${won(extra)}</b>${free ? ` <small>(추가 검사 1개 무료 적용)</small>` : ''}`;
   $('#calcSum').textContent = won(base + extra);
+  calc.total = base + extra;
+}
+function calcSummary() {
+  const core = coreTests(calc.g, calc.pkg);
+  const picks = [...calc.picks];
+  return ['[똑심마인드 키즈 신청]',
+    `학년: ${gname(calc.g)}`,
+    `패키지: ${C.packages[calc.pkg].name} (${won(C.packages[calc.pkg].price)})`,
+    `포함 검사: ${core.map(k => k === 'sct' ? 'SCT(후기 작성 시 무료)' : T[k].short).join(', ')}`,
+    `추가 선택: ${picks.length ? picks.map(k => T[k].short).join(', ') : '없음'}`,
+    `예상 금액: ${won(calc.total)}`].join('\n');
 }
 function wireCalc() {
   const box = $('#calc'); if (!box) return;
   box.addEventListener('click', e => {
+    if (e.target.closest('#calcApply')) { applyWith(calcSummary()); return; }
     const b = e.target.closest('.cg'); if (!b) return;
     if (b.dataset.g) calc.g = b.dataset.g;
     if (b.dataset.p) calc.pkg = b.dataset.p;

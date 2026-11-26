@@ -87,10 +87,21 @@ function result() {
     <div class="rprice"><span>예상 금액 (1명)</span><strong>${won(C.packages[pkg].price + extra)}</strong></div>
     ${teacher ? `<p class="tip">🧑‍🏫 ${C.group.min}명 이상이면 ${C.group.rate}% 할인되고, 반 전체 요약표를 함께 드려요. 14세 미만 학생은 보호자 동의서가 필요해요.</p>` : ''}
     <div class="hero-cta">
-      <a class="btn btn-big js-contact" href="#">이 구성으로 신청하기</a>
+      <button class="btn btn-big" id="apply">이 구성으로 신청하기</button>
       <button class="btn btn-line" id="again">다시 하기</button>
     </div>`;
   wireLinks();
-  box().onclick = e => { if (e.target.id === 'again') { st.ans = {}; stepGrade(); } };
+  const summary = ['[똑심마인드 키즈 신청 · 맞춤 추천 결과]',
+    `학년: ${gname(g)}`, `신청: ${teacher ? '학원·선생님' : '보호자'}`,
+    `패키지: ${C.packages[pkg].name} (${won(C.packages[pkg].price)})`,
+    `포함 검사: ${core.map(k => k === 'sct' ? 'SCT(후기 작성 시 무료)' : T[k].short).join(', ')}`,
+    `추가 검사: ${picks.length ? picks.map(k => T[k].short).join(', ') : '없음'}`,
+    `진로 옵션: ${car.length ? car.map(k => T[k].short).join(', ') : '없음'}`,
+    `예상 금액(1명): ${won(C.packages[pkg].price + extra)}`,
+    teacher ? '인원: (적어 주세요)명' : ''].filter(Boolean).join('\n');
+  box().onclick = e => {
+    if (e.target.id === 'again') { st.ans = {}; stepGrade(); }
+    if (e.target.id === 'apply') applyWith(summary);
+  };
 }
 document.addEventListener('DOMContentLoaded', stepGrade);
