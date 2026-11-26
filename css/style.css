@@ -332,3 +332,7 @@ details p { margin: 10px 0 0; color: var(--sub); }
 .ci.inc.deep { background: #FFE5DC; }
 .ci.inc.deep .ci-price { color: var(--coral); }
 .ci.inc.off { background: var(--paper); opacity: .7; }
+
+/* 나란한 버튼 크기 통일 (신청하기와 같은 크기) */
+.hero-cta .btn, .sample-btns .btn { padding: 16px 34px; font-size: 1.3rem; min-height: 62px; }
+@media (max-width: 560px) { .hero-cta .btn, .sample-btns .btn { padding: 14px 22px; font-size: 1.15rem; min-height: 56px; } }
